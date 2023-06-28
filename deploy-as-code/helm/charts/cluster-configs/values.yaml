@@ -81,11 +81,7 @@ cluster-configs:
 
     kibana-infra: 
       namespace: mgramseva
-      name: kibana-infra-creds     
-
-    pgadmin: 
-      namespace: mgramseva
-      name: pgadmin
+      name: kibana-infra-creds
 
     egov-si-microservice:
       namespace: mgramseva
