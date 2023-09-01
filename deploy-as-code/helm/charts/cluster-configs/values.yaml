@@ -9,8 +9,8 @@ cluster-configs:
     name: root-ingress
     namespace: mgramseva
     cert-issuer: letsencrypt-staging
-    appRoot: citizen
-    serviceName: citizen
+    appRoot: mgramseva-digit-ui
+    serviceName: mgramseva-digit-ui
     servicePort: 80
 
   nginx-errors:
