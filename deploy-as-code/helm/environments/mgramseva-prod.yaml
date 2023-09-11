@@ -258,9 +258,9 @@ egov-notification-sms:
   sms.debug.msggateway: "true"
   sms.enabled: "true"
 egov-user:
-  replicas: 2
-  heap: "-Xmx512m -Xms512m"
-  memory_limits: 768Mi
+  replicas: 4
+  heap: "-Xmx1900m -Xms1900m -XX:TieredStopAtLevel=1"
+  memory_limits: 2000Mi
   otp-validation: "true"
   citizen-otp-enabled: "true"
   employee-otp-enabled: "false"
@@ -273,6 +273,9 @@ egov-user:
   citizen-otp-fixed: "123456"
   citizen-otp-fixed-enabled: "true"
   egov-state-level-tenant-id: "pb"
+  server-tomcat-max-threads: "50"
+  server-tomcat-max-connections: "2500"
+  spring-datasource-tomcat-max-active: "25"
   account-unlock-cool-down-period-minutes: 5
 
 egov-workflow:
