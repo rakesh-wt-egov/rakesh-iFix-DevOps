@@ -823,6 +823,7 @@ oauth2-proxy:
 
 grafana:
   namespace: monitoring
+  dashboardsFolder: /work-dir/config-mgramseva/configs/monitoring-dashboards
   initContainers:
     gitSync:
       enabled: true
