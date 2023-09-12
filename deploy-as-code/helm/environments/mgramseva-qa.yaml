@@ -2,7 +2,7 @@ global:
   domain: mgramseva-qa.egov.org.in
   #containerRegistry: dwssio
   tracing-enabled: true
-  # namespace: mgramseva
+  namespace: mgramseva
   nodepool:
     nodeAffinity: true
     selector: mgramseva-qa-ng
