@@ -6,6 +6,13 @@ labels:
 # Init Containers Configs
 initContainers: {}
 
+initContainers:
+  dbMigration:
+    enabled: true
+    schemaTable: "eg_notification_sms_schema"
+    image:
+      repository: "egov-notification-sms-db"
+
 # Container Configs
 image:
   repository: "egov-notification-sms"
@@ -67,6 +74,8 @@ env: |
         key: sms-enabled
   - name: SMS_SENDER
     value: {{ index .Values "sms-sender" | quote }}
+  - name: SAVE_SMS_ENTITY_ENABLED
+    value: {{ index .Values "save-sms-entity-enabled" | quote }}
   - name: SMS_SENDER_REQUESTTYPE
     value: {{ index .Values "sms-sender-requesttype" | quote }}
   {{- if index .Values "sms-custom-config" }}

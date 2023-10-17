@@ -1,6 +1,6 @@
 global:
   domain: mgramseva-dwss.punjab.gov.in
-  #containerRegistry: dwssio
+  containerRegistry: dwssio
   tracing-enabled: true
   namespace: mgramseva
   nodepool:
@@ -122,7 +122,7 @@ cluster-configs:
 
 
     egov-service-host:
-      namespace: [mgramseva]
+      namespace: [mgramseva , monitoring]
       data:
         billing-service: "http://billing-service.mgramseva:8080/"
         collection-services: "http://collection-services.mgramseva:8080/"
@@ -198,6 +198,17 @@ ifix-reference-adapter:
   spring-quartz-jdbc-initialize-schema: "always"
   mgramseva-pspcl-vendor-name: "PSPCLVENDOR"
 
+ifix-migration-toolkit:
+  fiscal-event-kafka-push-topic: "fiscal-event-request-validated"
+  fiscal-event-es-push-topic: "index-fiscal-events"
+  ifix-migration-batch-size: "200"
+  ifix-department-entity-search-endpoint: "ifix-department-entity/departmentEntity/hierarchyLevel/v1/_search"
+  department-entity-migration-batch-size: 20
+  department-entity-migration-persister-topic: de-migration-topic
+  persister-kafka-department-entity-create-topic: save-dept-entity-application
+  department-hierarchy-migration-batch-size: 20
+  persister-kafka-department-hierarchy-create-topic: save-dept-entity-hierarchy-application
+
 # core >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 egov-filestore:
@@ -246,10 +257,11 @@ egov-notification-sms:
   sms.default.tmplid: "1"
   sms.debug.msggateway: "true"
   sms.enabled: "true"
+  save-sms-entity-enabled: "true"
 egov-user:
-  replicas: 2
-  heap: "-Xmx512m -Xms512m"
-  memory_limits: 768Mi
+  replicas: 4
+  heap: "-Xmx1900m -Xms1900m -XX:TieredStopAtLevel=1"
+  memory_limits: 2000Mi
   otp-validation: "true"
   citizen-otp-enabled: "true"
   employee-otp-enabled: "false"
@@ -262,6 +274,9 @@ egov-user:
   citizen-otp-fixed: "123456"
   citizen-otp-fixed-enabled: "true"
   egov-state-level-tenant-id: "pb"
+  server-tomcat-max-threads: "50"
+  server-tomcat-max-connections: "2500"
+  spring-datasource-tomcat-max-active: "25"
   account-unlock-cool-down-period-minutes: 5
 
 egov-workflow:
@@ -305,7 +320,7 @@ egov-persister:
   replicas: 2
   images:
     - egovio/egov-persister
-  persist-yml-path: "file:///work-dir/config-mgramseva/egov-persister/billing-services-persist.yml,file:///work-dir/config-mgramseva/egov-persister/collection-migration-persister.yml,file:///work-dir/config-mgramseva/egov-persister/echallan.yml,file:///work-dir/config-mgramseva/egov-persister/egf-bill.yaml,file:///work-dir/config-mgramseva/egov-persister/egov-user-event-persister.yml,file:///work-dir/config-mgramseva/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/config-mgramseva/egov-persister/pdf-filestoreid-update.yml,file:///work-dir/config-mgramseva/egov-persister/pdf-generator.yml,file:///work-dir/config-mgramseva/egov-persister/pg-service-persister.yml,file:///work-dir/config-mgramseva/egov-persister/property-services.yml,file:///work-dir/config-mgramseva/egov-persister/pt-persist.yml,file:///work-dir/config-mgramseva/egov-persister/water-persist.yml,file:///work-dir/config-mgramseva/egov-persister/water-meter.yml,file:///work-dir/config-mgramseva/egov-persister/vendor-persister.yaml,file:///work-dir/config-mgramseva/egov-persister/apportion-persister.yml,file:///work-dir/config-mgramseva/egov-persister/property-services-registry.yml"
+  persist-yml-path: "file:///work-dir/config-mgramseva/egov-persister/billing-services-persist.yml,file:///work-dir/config-mgramseva/egov-persister/collection-migration-persister.yml,file:///work-dir/config-mgramseva/egov-persister/echallan.yml,file:///work-dir/config-mgramseva/egov-persister/egf-bill.yaml,file:///work-dir/config-mgramseva/egov-persister/egov-user-event-persister.yml,file:///work-dir/config-mgramseva/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/config-mgramseva/egov-persister/pdf-filestoreid-update.yml,file:///work-dir/config-mgramseva/egov-persister/pdf-generator.yml,file:///work-dir/config-mgramseva/egov-persister/pg-service-persister.yml,file:///work-dir/config-mgramseva/egov-persister/property-services.yml,file:///work-dir/config-mgramseva/egov-persister/pt-persist.yml,file:///work-dir/config-mgramseva/egov-persister/water-persist.yml,file:///work-dir/config-mgramseva/egov-persister/water-meter.yml,file:///work-dir/config-mgramseva/egov-persister/vendor-persister.yaml,file:///work-dir/config-mgramseva/egov-persister/apportion-persister.yml,file:///work-dir/config-mgramseva/egov-persister/property-services-registry.yml,file:///work-dir/config-mgramseva/egov-persister/department-entity-persister.yml,file:///work-dir/config-mgramseva/egov-persister/department-entity-migration-progress.yml,file:///work-dir/config-mgramseva/egov-persister/adapter-master-data-service.yml,file:///work-dir/config-mgramseva/egov-persister/sms-persister.yml"
   initContainers:
     gitSync:
       repo: "git@github.com:misdwss/config-mgramseva"
@@ -812,6 +827,7 @@ oauth2-proxy:
 
 grafana:
   namespace: monitoring
+  dashboardsFolder: /work-dir/config-mgramseva/configs/monitoring-dashboards
   initContainers:
     gitSync:
       enabled: true
